@@ -3,14 +3,14 @@ import { throttle } from 'lodash';
 
 const iframe = document.querySelector('iframe');
 const player = new Player(iframe);
+console.log(player);
 
-player.on('timeupdate',  throttle( e => {
-    localStorage.setItem('videoplayer-current-time', e.seconds);
-    }, 1000)
-    );
+const onPlayer = ({ seconds }) => {
+    localStorage.setItem('videoplayer-current-time', seconds)
+};
 
-player
-.setCurrentTime(localStorage.getItem('videoplayer-current-time'))
-.catch(function (error) {
-    console.error(error)
-});
+if(localStorage.getItem('videoplayer-current-time')){
+    player.setCurrentTime(localStorage.getItem('videoplayer-current-time'));
+}
+
+player.on('timeupdate', throttle(onPlayer, 1000));
